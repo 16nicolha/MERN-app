@@ -22,6 +22,22 @@ app.get("/", (req, res) => {
     res.json({hello: "world"})
 });
 
+app.get("/notes", async (req, res) => {
+    //find the notes
+    const notes = await Note.find();
+    //Respond with them
+    res.json({ notes: notes });
+});
+
+app.get("/notes/:id", async (req, res) => {
+    //Get id off the url
+    const noteId = req.params.id;
+    //Find the note using that id
+    const note = await Note.findById(noteId)
+    //Respond with the note
+    res.json({ note: note })
+})
+
 app.post('/notes', async (req, res) => {
     //Get the sent in data off request body
    const title =  req.body.title;
@@ -33,6 +49,18 @@ app.post('/notes', async (req, res) => {
     });
     //respond with the new note
     res.json({ note: note });
+})
+
+app.put("/notes/:id", async (req, res) => {
+    //Get the id off the url
+    const noteId = req.params.id;
+    // Get the data off the req body
+    const title = req.body.title;
+    const body = req.body.body;
+    //Find and update the record
+    const note = Note.findByIdAndUpdate(noteId, {})
+    //Respond with it
+    res.json ({ note: note });
 })
 
 //start our server
