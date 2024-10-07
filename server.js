@@ -57,11 +57,27 @@ app.put("/notes/:id", async (req, res) => {
     // Get the data off the req body
     const title = req.body.title;
     const body = req.body.body;
-    //Find and update the record
-    const note = Note.findByIdAndUpdate(noteId, {})
+
+    //find and update the record
+    await Note.findByIdAndUpdate(noteId, {
+        title: title, 
+        body: body, 
+    });
+
+    //find updated note
+    const note = await Note.findById(noteId);
     //Respond with it
     res.json ({ note: note });
-})
+});
+
+app.delete("/notes/:id", async (req, res) => {
+    //get id off url
+    const noteId = req.params.id;
+    //delete the record
+    await Note.deleteOne({_id: noteId });
+    //Respond
+    res.json({ success: "Record deleted" });
+});
 
 //start our server
 app.listen(process.env.PORT);
